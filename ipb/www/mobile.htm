@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+	<title>PagineBaby</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="description" content="iPhone, iPad and Android App to quickly find information about your surroundings!">
+	<meta name="author" content="Rana Elettrica Soc. Coop.">
+
+	<style type="text/css" media="screen">@import "mobile/js/extensions/jqt.bars/jqt.bars.css";</style>
+	<style type="text/css" media="screen">@import "mobile/js/extensions/jqt.bars/theme.jqt.bars.css";</style>
+	<style type="text/css" media="screen">@import "mobile/js/extensions/jqt.listIndex/jqt.listIndex.css";</style>
+	<style type="text/css" media="screen">@import "mobile/js/extensions/jqt.photo.css";</style>
+	<style type="text/css" media="screen">@import "mobile/jqtouch.css";</style>
+	<style type="text/css" media="screen">@import "mobile/theme.css";</style>
+	<style type="text/css" media="screen">@import "mobile/style.css";</style>
+	
+	<style type="text/css" media="screen">@import "js/css/south-street/jquery-ui-1.8.21.custom.css";</style>
+	
+	<script type="text/javascript" src="js/jquery-1.4.2.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+	<!-- GOOGLEAPI -->
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+	<!-- GOOGLEAPI -->
+	<script type="text/javascript" src="js/script.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/dictionary.js"></script>
+	<script type="text/javascript" src="js/cat.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		selectCat = "<select class=\"cat\" name=\"cat[]\" onchange=\"addCat(this);\">";
+		selectCat+= "<option value=\"\">"+getLabel("Categoria")+"</option>";
+		
+		searchCat = "<ul class=\"edgetoedge\">";
+		searchCat+= "<li>";
+		searchCat+= "<ul class=\"individual\">";
+		searchCat+= "<li><a class=\"greenButton\" onclick=\"catSearch('hl');\" href=\"#\">"+getLabel("PrimoPiano")+"</a></li>";
+		searchCat+= "<li><a class=\"greenButton\" onclick=\"catSearch('pbcard');\" href=\"#\">"+getLabel("PBcard")+"</a></li>";
+		searchCat+= "</ul>";
+		searchCat+= "</li>";
+		//for(var a;a<catMain.length;cat++) {
+		for(var item in catMain) {
+			selectCat+= "<optgroup label=\""+catMain[item].title+"\">";
+			
+			searchCat+= "<li>";
+			searchCat+= "<select onchange=\"catSearch(this.value);\" id=\"cat"+item+"\" name=\"cat"+item+"\">";
+			searchCat+= "<option>"+catMain[item].title+"</option>";
+			searchCat+= "<option value=\""+item+"\">"+catMain[item].title+" ("+getLabel("tutto")+")</option>";
+			for(var item2 in catMain[item].items) {
+				selectCat+= "<option value=\"|"+item+"|"+catMain[item].items[item2].id+"|\">"+catMain[item].items[item2].name+"</option>";
+				searchCat+= "<option value=\""+catMain[item].items[item2].id+"\">"+catMain[item].items[item2].name+"</option>";
+			}
+			selectCat+= "</optgroup>";
+	
+			searchCat+= "</select>";
+			searchCat+= "</li>";
+		}
+		selectCat+= "</select>";
+		
+		searchCat+= "</ul>";
+	</script>
+	<script type="text/javascript" src="mobile/js/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="mobile/js/jqtouch.js" charset="utf-8"></script>
+	<script type="text/javascript" src="mobile/js/extensions/jqt.autotitles.js" charset="utf-8"></script>
+	<script type="text/javascript" src="mobile/js/extensions/jqt.bars/jqt.bars.js" charset="utf-8"></script>
+	<script type="text/javascript" src="mobile/js/extensions/jqt.listIndex/jqt.listIndex.js" charset="utf-8"></script>
+	<script type="text/javascript" src="mobile/js/extensions/jqt.photo.js" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		var jQT = new $.jQTouch({
+			icon: 'mobile/ico/57x57.png',
+			icon4: 'mobile/ico/114x114.png',
+			addGlossToIcon: false,
+			slideleftSelector: '#jqt > ul > li > a, #jqt > ol > li > a',
+			startupScreen: 'mobile/ico/startup.png',
+			statusBar: 'black',
+			preloadImages: [
+				'mobile/img/activeButton.png',	 	
+				'mobile/img/back_button.png',
+				'mobile/img/back_button_clicked.png',
+				'mobile/img/blueButton.png',
+				'mobile/img/button.png',
+				'mobile/img/button_clicked.png',
+				'mobile/img/grayButton.png',
+				'mobile/img/greenButton.png',
+				'mobile/img/redButton.png',
+				'mobile/img/whiteButton.png',
+				'mobile/img/loading.gif',
+				'mobile/img/jqt.bars/ajax.png',
+				'mobile/img/jqt.bars/animation.png',
+				'mobile/img/jqt.bars/demos.png',
+				'mobile/img/jqt.bars/events.png',
+				'mobile/img/jqt.bars/extensions.png',
+				'mobile/img/jqt.bars/iphone.png',
+				'mobile/img/jqt.bars/jqt.png',
+				'mobile/img/jqt.bars/video.png',
+				'mobile/img/jqt.bars/ajax@2x.png',
+				'mobile/img/jqt.bars/animation@2x.png',
+				'mobile/img/jqt.bars/demos@2x.png',
+				'mobile/img/jqt.bars/events@2x.png',
+				'mobile/img/jqt.bars/extensions@2x.png',
+				'mobile/img/jqt.bars/iphone@2x.png',
+				'mobile/img/jqt.bars/jqt@2x.png',
+				'mobile/img/jqt.bars/video@2x.png'
+			],
+			useFastTouch: true
+		});
+	</script>
+</head>
+<body>
+<div id="data">loading ...</div>
+<div id="fb-root"></div>
+<!-- ONLY WEB -->
+<script type="text/javascript" charset="utf-8">
+(function() {
+	var e = document.createElement('script'); e.async = true;
+	e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	document.getElementById('fb-root').appendChild(e);
+}());
+var at;
+window.fbAsyncInit = function() {
+	FB.init({ appId: '366045943462852', 
+	status: true, 
+	cookie: true,
+	xfbml: true,
+	oauth: true});
+	$(".login").show();
+	$(".logout").hide();
+	FB.Event.subscribe('auth.statusChange', function(response) {
+		me(response);
+		at = response.authResponse.accessToken;
+		console.log(at);
+	});			
+};
+function login(){
+	document.location.href = 'https://m.facebook.com/dialog/oauth?client_id=366045943462852&redirect_uri=http://ipb.flyer.it/&scope=email,publish_checkins,publish_stream,manage_pages';
+}
+</script>
+<!-- ONLY WEB END -->
+<div id="log"></div>
+<!-- tabbar -->
+<div id="tabbar">
+	<div>
+		<ul>
+			<li>
+	  		<!-- Action & navigation -->
+	  		<a href="#facebook" mask="mobile/img/jqt.bars/alert.png" mask2x="mobile/img/jqt.bars/alert@2x.png">
+				<strong><script type="text/javascript">document.write(getLabel("Facebook"))</script></strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#preferiti" mask="mobile/img/jqt.bars/demos.png" mask2x="mobile/img/jqt.bars/demos@2x.png">
+				<strong><script type="text/javascript">document.write(getLabel("Preferiti"))</script></strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#ipb" mask="mobile/img/jqt.bars/iphone.png" mask2x="mobile/img/jqt.bars/iphone@2x.png" onclick="nearMe(0);">&nbsp;</a>
+				<!-- <small class="badge right">4</small>
+				<strong><script type="text/javascript">document.write(getLabel("PagineBaby"))</script></strong> -->
+			</li>
+			<li>
+	  		<a href="#aggiungi" mask="mobile/img/jqt.bars/extensions.png" mask2x="mobile/img/jqt.bars/extensions@2x.png" onclick="onAdd();">
+				<strong><script type="text/javascript">document.write(getLabel("Aggiungi"))</script></strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#profilo" mask="mobile/img/jqt.bars/more.png" mask2x="mobile/img/jqt.bars/more@2x.png">
+				<strong><script type="text/javascript">document.write(getLabel("Impostazioni"))</script></strong>
+	  		</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="jqt">
+	<!-- PagineBaby -->
+	<div id="ipb" class="keep_tabbar">
+		<div class="toolbar">
+			<a class="leftButton button slideup" href="#" onclick="$('#search').show('slidedown');$('#ipb .s-scrollpane').css('-webkit-transform', 'translate3d(0px, 0, 0px)');"><script type="text/javascript">document.write(getLabel("cerca"))</script></a>
+			<h1><script type="text/javascript">document.write(getLabel("PagineBaby"))</script></h1>
+			<a id="searchButton" class="button slideup" href="#searchplacesadv" onclick="$('#search').hide();"><script type="text/javascript">document.write(getLabel("categorie"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search" action="#" style="display:none;">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+						<script type="text/javascript">document.getElementById("search-text").placeholder = getLabel("Cerca");</script>
+					</ul>
+				</form>
+				<ul class="edgetoedge" id="search-results">
+			  		<li class="sep"><script type="text/javascript">document.write(getLabel("Risultati"))</script></li>				
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div id="searchplacesadv" class="keep_tabbar">
+		<div class="toolbar">
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+			<h1><script type="text/javascript">document.write(getLabel("PagineBaby"))</script></h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search2" action="#">
+					<script type="text/javascript">document.write(searchCat)</script>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- UI - ipbdett -->
+	<div id="ipbdett">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("PagineBaby"))</script></h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div id="dett">
+			</div>
+		</div>
+	</div>
+	
+	<!-- Aggiungi -->
+	<div id="aggiungi">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Aggiungi"))</script></h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="ll" id="ll" value="" />
+		  			<input type="hidden" name="author" id="author" value="" />
+		  			<input type="hidden" name="pid" id="pid3" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name" /></li>
+						<script type="text/javascript">document.getElementById("name").placeholder = getLabel("Nome *");</script>
+						<li><input type="text" name="address" placeholder="Indirizzo" id="address" /></li>
+						<script type="text/javascript">document.getElementById("address").placeholder = getLabel("Indirizzo");</script>
+						<li>
+							<script type="text/javascript">document.write(selectCat)</script>
+						</li>
+						<li><input type="text" name="street_number" placeholder="Numero civico" id="street_number" /></li>
+						<script type="text/javascript">document.getElementById("street_number").placeholder = getLabel("Numero civico");</script>
+						<li><input type="text" name="zip" placeholder="CAP" id="zip" /></li>
+						<script type="text/javascript">document.getElementById("zip").placeholder = getLabel("CAP");</script>
+						<li><input type="text" name="city" placeholder="Citta" id="city" /></li>
+						<script type="text/javascript">document.getElementById("city").placeholder = getLabel("Citta");</script>
+						<li><input type="text" name="country" placeholder="Stato" id="country" /></li>
+						<script type="text/javascript">document.getElementById("country").placeholder = getLabel("Stato");</script>
+						<li id="mappaNew">mappa</li>
+						<li><textarea name="txt" placeholder="Descrizione" id="txt"></textarea></li>
+						<script type="text/javascript">document.getElementById("txt").placeholder = getLabel("Descrizione");</script>
+						<li><input type="text" name="tel" placeholder="Telefono" id="tel" /></li>
+						<script type="text/javascript">document.getElementById("tel").placeholder = getLabel("Telefono");</script>
+						<li><input type="text" name="email" placeholder="Email" id="email" /></li>
+						<script type="text/javascript">document.getElementById("email").placeholder = getLabel("Email");</script>
+						<li><input type="text" name="website" placeholder="Sito web" id="website" /></li>
+						<script type="text/javascript">document.getElementById("website").placeholder = getLabel("Sito web");</script>
+						<li><a class="greenButton" href="#" onclick="placeSave()"><script type="text/javascript">document.write(getLabel("SALVA"))</script></a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Propietario -->
+	<div id="propietario">
+		<div class="toolbar">
+			<h1>Segnalazioni</h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form id="segnalazioniMsg">
+		  			<input type="hidden" name="pid" id="pid2" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name2" /></li>
+						<script type="text/javascript">document.getElementById("name2").placeholder = getLabel("Nome *");</script>
+						<li><input type="text" name="email" placeholder="Email *" id="email2" /></li>
+						<script type="text/javascript">document.getElementById("email2").placeholder = getLabel("Email *");</script>
+						<li><textarea name="message" placeholder="Messaggio *" id="message"></textarea></li>
+						<script type="text/javascript">document.getElementById("message").placeholder = getLabel("Messaggio *");</script>
+						<li><a class="greenButton" href="#" onclick="sendMail('#segnalazioniMsg')"><script type="text/javascript">document.write(getLabel("INVIA"))</script></a></li>
+						<li><a class="greenButton" href="#" onclick="jQT.goBack()"><script type="text/javascript">document.write(getLabel("ANNULLA"))</script></a></li>
+					</ul>
+		  		</form>
+		  		<br class="myClear" />
+			</div>
+		</div>
+	</div>
+
+	<!-- Vota -->
+	<div id="rate">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Vota"))</script></h1>
+			<a href="#ipb" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="uid" id="uid" value="" />
+		  			<input type="hidden" name="pid" id="pid" value="" />
+					<ul class="edit rounded">
+			  			<li><script type="text/javascript">document.write(getLabel("Vota"))</script></li>
+			  			<li>
+						    <div id="r2" class="rate_widget">
+						        <div class="star_1 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_2 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_3 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_4 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_5 ratings_stars_big ratings_stars_active"></div>
+						    </div>
+						    <input type="hidden" name="rate" id="rateval" value="" />
+						    <br class="myClear" />
+			  			</li>
+			  			<li>
+							<ul class="individual">
+								<li><a class="greenButton" href="#ipb" onclick="ratePlace()"><script type="text/javascript">document.write(getLabel("VOTA"))</script></a></li>
+								<li><a class="greenButton" href="#ipb" onclick="rateOk (null)"><script type="text/javascript">document.write(getLabel("ANNULLA"))</script></a></li>
+							</ul>
+			  			</li>
+					</ul>
+		  		</form>
+		  		<br class="myClear" />
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modifica posizione -->
+	<div id="editmap">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Modifica mappa"))</script></h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<form id="search-map-form" action="#">
+			<ul class="edgetoedge">
+		  		<li><input type="text" name="search-text" placeholder="Citta" id="search-map" /></li>
+				<script type="text/javascript">document.getElementById("search-map").placeholder = getLabel("Citta");</script>
+			</ul>
+		</form>
+		<div id="map_canvas">map div</div>
+	</div>
+	
+	<!-- facebook -->
+	<div id="facebook" class="selectable">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Facebook"))</script></h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="fb-like-box-cnt">
+					<li><script type="text/javascript">document.write(getLabel("Per accedere a facebook devi eseguire il login"))</script>, <a href="#" onclick="login()"><script type="text/javascript">document.write(getLabel("accedi ora"))</script></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- preferiti -->
+	<div id="preferiti">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Preferiti"))</script></h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="fav-results">
+					<li><script type="text/javascript">document.write(getLabel("Per visualizzare i preferiti devi eseguire il login"))</script>, <a href="#" onclick="login()"><script type="text/javascript">document.write(getLabel("accedi ora"))</script></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Profilo -->
+	<div id="profilo">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Impostazioni"))</script></h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<h2><script type="text/javascript">document.write(getLabel("Utente"))</script></h2>
+				<ul class="rounded" id="user">
+					<li class="login"><a href="#" onClick="login()"><script type="text/javascript">document.write(getLabel("Login"))</script></a></li>
+				</ul>
+				<h2><script type="text/javascript">document.write(getLabel("Impostazioni"))</script></h2>
+				<ul class="rounded">
+					<li><script type="text/javascript">document.write(getLabel("Raggio d'azione"))</script> <span class="toggle"><input type="text" disabled="disabled" name="radius-field" id="radius-field" value="" /></span></li>
+					<li><div id="slider"></div></li>
+					<li><script type="text/javascript">document.write(getLabel("Posizione dispositivo"))</script> <span class="toggle"><input type="checkbox" name="autopos" id="autopos" value="1" onchange="setMode();" /></span></li>
+					<li id="position"><script type="text/javascript">document.write(getLabel("Nessuna posizione impostata"))</script> <a href="#editmap" onclick="editPosMap()"><script type="text/javascript">document.write(getLabel("imposta manualmente"))</script></a></li>
+				</ul>
+				<h2><script type="text/javascript">document.write(getLabel("Altro"))</script></h2>
+				<ul class="rounded">
+					<li><a href="#comeusare"><script type="text/javascript">document.write(getLabel("Come usare PagineBaby"))</script></a></li>
+					<li><a href="#credits"><script type="text/javascript">document.write(getLabel("Credits"))</script></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Credits -->
+	<div id="credits">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Credits"))</script></h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="rounded">
+					<li><p>
+						<img src="mobile/img/rana.png" align="right" />
+						<span class="stitList"><script type="text/javascript">document.write(getLabel("Pagine Baby è un progetto della cooperativa"))</script></span><br />
+						<b>Rana Elettrica</b>
+						<a href="http://www.paginebaby.it" target="_blank">www.paginebaby.it</a><br />
+						<hr />
+						<br />
+						<img src="mobile/img/flyer.png" align="right" />
+						<span class="stitList"><script type="text/javascript">document.write(getLabel("This app is made by"))</script></span><br />
+						<b>Flyer communication</b><br />
+						<a href="http://www.flyer.it" target="_blank">www.flyer.it</a>
+						</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Comeusare -->
+	<div id="comeusare">
+		<div class="toolbar">
+			<h1><script type="text/javascript">document.write(getLabel("Come usare"))</script></h1>
+			<a href="#" class="back"><script type="text/javascript">document.write(getLabel("indietro"))</script></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<div class="dettCntMain">
+					<script type="text/javascript">document.write(getLabel("Come usare txt"))</script>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="loading"><div id="loadingBkg"></div><div id="loadingImg"></div></div>
+</body>
+</html>

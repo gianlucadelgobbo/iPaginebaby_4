@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Google Maps JavaScript API v3 Example: Marker Animations</title>
+<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  var marker;
+  var map;
+  function initialize(lat,lng) {
+	var position = new google.maps.LatLng(lat,lng);
+    var mapOptions = {
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      center: position
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+    marker = new google.maps.Marker({
+      map:map,
+      draggable:true,
+      animation: google.maps.Animation.DROP,
+      position: position
+    });
+    google.maps.event.addListener(marker, 'click', toggleBounce);
+	google.maps.event.addListener(marker, "dragend", function(obj) {
+		alert(obj.latLng.Na+' '+obj.latLng.Oa);
+    });
+  }
+  function toggleBounce() {
+
+    if (marker.getAnimation() != null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+  }
+</script>
+</head>
+<body onload="initialize(59.32522, 18.07002)">
+<div id="map_canvas" style="width: 320px; height: 400px;">map div</div>
+<input type="button" value="GET POS" onclick="alert(marker.position.Na.length+' '+marker.position.Oa+' '+marker.getPosition())" />
+<input type="button" value="SET POS" onclick="initialize(41.899224357510526,12.520055770874023)" />
+</body>
+</html>

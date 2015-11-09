@@ -1,0 +1,15 @@
+/* @group tabbar theme */
+#tabbar a.enabled::before {
+  background-image:
+    -webkit-gradient(linear, left top, left bottom,
+      from(rgba(089, 159, 055, 0)),
+      color-stop(.43, rgba(089, 155, 055, 0)),
+      to(rgba(089, 155, 055, 1))),
+    -webkit-gradient(radial, 60 162, 150, 60 162, 149, 
+      from(rgba(132, 187, 051, 0)), 
+      to(rgba(132, 187, 051, 1))),
+    -webkit-gradient(radial, 20 -43, 60, 20 -43, 40, 
+      from(rgba(161, 203, 97, 1)), 
+      to(rgba(161, 203, 97, 1)));
+}
+/* @end */

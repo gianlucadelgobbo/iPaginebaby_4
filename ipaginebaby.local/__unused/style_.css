@@ -1,0 +1,42 @@
+#loading {position:absolute;width:100%;height:100%;}
+#loadingBkg {position:absolute;width:100%;height:100%;background-color:#FFF;opacity:.6;z-index:1000;}
+#loadingImg {position:absolute;width:100%;height:100%;background-image:url(themes/apple/img/loading.gif);background-position:center center;background-repeat:no-repeat;}
+.fbImg{padding:0 10px 10px 0}
+.fbTit{}
+.fbAut{font-weight:normal;color:#333;}
+.fbMess{font-weight:normal;}
+
+#logout,#data{display:none}
+/*#jqt{max-width:320px;}*/
+#mappaNew{height:100px;}
+#map_canvas{height:733px;}
+#mappaDett{height:200px;margin:5px 0;}
+#search2 ul li select{font-size:32px}
+.dettCntMain{-webkit-border-radius:8px;-webkit-box-shadow:rgba(0,0,0,.3) 1px 1px 3px;color:#000;background-color:#FFFFFF;border:1px solid #333;padding:10px;margin:10px;}
+#dettCnt .whiteButton{margin-top:10px;}
+#dettCnt p,#dettCnt .txt{margin-bottom:5px;}
+#dettCnt .txt{margin-top:5px;}
+
+.stitList{font-size:13px;font-weight:normal;color:#999}
+.stitTitList{font-size:13px;font-weight:normal;color:#333}
+.imgList{-webkit-border-radius:8px;margin-right:10px;}
+.pbcListCnt{-webkit-border-radius:4px;font-size:13px;font-weight:bold;background-color:#336600; color:#FFF;padding:1px 5px;}
+
+.imgCnt{-webkit-border-radius:8px;height:185px;width:280px;overflow:hidden;text-align:center;border:1px solid #333}
+.stitTit{color:#999}
+.myClear{clear:both;}
+p a{color:#336600;font-weight:bold;}
+#jqt ul li select {text-indent:8px}
+#jqt ul li a.greenButton{margin:1px;}
+#jqt ul.individual {margin:5px 0;}
+#jqt ul.individual li{padding:0;border:0;width:50%;}
+.left {float:left;}
+.rate_widget {float:left;overflow:  visible;position:  relative;width:180px;margin-left:10px;}
+.ratings_stars,.ratings_stars_big {}
+.ratings_stars {background:url('ico/star_empty.png') no-repeat;float:left;height:19px;padding:2px;width:17px;}
+.ratings_vote {background:url('ico/star_full.png') no-repeat;}
+.ratings_over {background:url('ico/star_highlight.png') no-repeat;}
+.ratings_stars_big {background:url('ico/star_empty_big.png') no-repeat;float:left;height:30px;padding:2px;width:32px;}
+.ratings_vote_big {background:url('ico/star_full_big.png') no-repeat;}
+.ratings_over_big {background:url('ico/star_highlight_big.png') no-repeat;}
+.hl{background-color: #FFFFCC;}

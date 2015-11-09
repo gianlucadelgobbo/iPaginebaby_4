@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<meta charset="UTF-8" />
+<title>PagineBaby</title>
+<style type="text/css" media="screen">@import "jqtouch/jqtouch.css";</style>
+<style type="text/css" media="screen">@import "themes/apple/theme.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.bars/jqt.bars.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.bars/themes/apple/theme.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.listIndex/jqt.listIndex.css";</style>
+<style type="text/css" media="screen">@import "style.css";</style>
+<script src="jqtouch/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>
+<!-- FOURSQUARE -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+<!-- FOURSQUARE -->
+<script src="script.js" type="application/x-javascript" charset="utf-8"></script>
+
+<script src="jqtouch/jqtouch.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="extensions/jqt.autotitles.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="extensions/jqt.bars/jqt.bars.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="extensions/jqt.listIndex/jqt.listIndex.js" type="application/x-javascript" charset="utf-8"></script>
+
+		<link type="text/css" href="css/south-street/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
+		<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+<style type="text/css" media="screen">
+/*
+#jqt.fullscreen #ipb .info {
+  display:none;
+}
+#jqt #facebook {
+  font-size:13px;
+  text-align:center;
+  text-shadow:rgba(255, 255, 255, 0.3) 0 -1px 0;
+}
+#jqt #facebook p {
+  margin-bottom:8px;
+}
+#jqt #facebook > div > div > p > a, h2 {
+  color:inherit;
+  font-weight:700;
+  text-decoration:none;
+}
+*/
+</style>
+<script type="text/javascript" charset="utf-8">
+	var jQT = new $.jQTouch({
+		icon: 'ico/57x57.png',
+		icon4: 'ico/114x114.png',
+		addGlossToIcon: false,
+		slideleftSelector: '#jqt > ul > li > a, #jqt > ol > li > a',
+		startupScreen: 'ico/startup.png',
+		statusBar: 'black',
+		preloadImages: [
+			'themes/apple/img/activeButton.png',	 	
+			'themes/apple/img/back_button.png',
+			'themes/apple/img/back_button_clicked.png',
+			'themes/apple/img/blueButton.png',
+			'themes/apple/img/button.png',
+			'themes/apple/img/button_clicked.png',
+			'themes/apple/img/grayButton.png',
+			'themes/apple/img/greenButton.png',
+			'themes/apple/img/redButton.png',
+			'themes/apple/img/whiteButton.png',
+			'themes/apple/img/loading.gif',
+			'bar_img/ajax.png',
+			'bar_img/animation.png',
+			'bar_img/demos.png',
+			'bar_img/events.png',
+			'bar_img/extensions.png',
+			'bar_img/iphone.png',
+			'bar_img/jqt.png',
+			'bar_img/video.png',
+			'bar_img/ajax@2x.png',
+			'bar_img/animation@2x.png',
+			'bar_img/demos@2x.png',
+			'bar_img/events@2x.png',
+			'bar_img/extensions@2x.png',
+			'bar_img/iphone@2x.png',
+			'bar_img/jqt@2x.png',
+			'bar_img/video@2x.png'
+		],
+		useFastTouch: true
+	});
+   </script>
+</head>
+<body>
+<div id="fb-root"></div>
+<script type="text/javascript" charset="utf-8">
+(function() {
+	var e = document.createElement('script'); e.async = true;
+	e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	document.getElementById('fb-root').appendChild(e);
+}());
+window.fbAsyncInit = function() {
+	FB.init({ appId: '366045943462852', 
+	status: true, 
+	cookie: true,
+	xfbml: true,
+	oauth: true});
+	myResize();
+	//$("#fb-like-box-cnt").html('<div class="fb-like-box" data-href="https://www.facebook.com/PagineBabyItaly" data-width="'+$(document).width()+'" data-height="'+$(".s-scrollwrapper").height()+'" data-colorscheme="white" data-show-faces="false" data-border-color="#333333" data-stream="true" data-header="false"></div>');
+	$("#login").show();
+	$("#logout").hide();
+	FB.Event.subscribe('auth.statusChange', handleStatusChange);  
+};
+function handleStatusChange(response) {
+	if (response.authResponse) {
+		FB.api('/me', function(response) {
+			$("#logout").show();
+			$("#login").hide();
+			$("#author").val(response.id);
+			$("#uid").val(response.id);
+			$("#fbname").html(response.name);
+			$("#fbemail").html(response.email);
+			$("#fblocation").html(response.location.name);
+			loadFav(response.id);
+			//console.log(response);
+			loginLog(response);
+		});
+		//alert(response.status);
+	}
+}
+</script>
+<!-- tabbar -->
+<div id="tabbar">
+	<div>
+		<ul>
+			<li>
+	  		<!-- Action & navigation -->
+	  		<a href="#facebook" mask="bar_img/alert.png" mask2x="bar_img/alert@2x.png">
+				<strong>Facebook</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#preferiti" mask="bar_img/demos.png" mask2x="bar_img/demos@2x.png">
+				<strong>Preferiti</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#ipb" mask="bar_img/iphone.png" mask2x="bar_img/iphone@2x.png" onclick="nearMe()">
+				<!-- <small class="badge right">4</small> -->
+				<strong>PagineBaby</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#aggiungi" mask="bar_img/extensions.png" mask2x="bar_img/extensions@2x.png" onclick="onAdd();">
+				<strong>Aggiungi</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#profilo" mask="bar_img/more.png" mask2x="bar_img/more@2x.png">
+				<strong>Impostazioni</strong>
+	  		</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="jqt">
+	<!-- PagineBaby -->
+	<div id="ipb">
+		<div class="toolbar">
+			<a class="leftButton button slideup" href="#searchplaces">cerca</a>
+			<h1>PagineBaby</h1>
+			<a id="searchButton" class="button slideup" href="#searchplacesadv">categorie</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="near-results">
+				  	<li class="sep">Cerco vicino a te</li>				
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="searchplaces">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+			<a class="button slideup" href="#searchplacesadv">categorie</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search" action="#">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+					</ul>
+					<ul class="edgetoedge" id="search-results">
+				  		<li class="sep">Risultati</li>				
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="searchplacesadv">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search2" action="#">
+					<ul class="edgetoedge">
+						<li>
+							<select onchange="advSearch(this.value);" id="cat309" name="cat309">
+								<option>Sport</option>
+								<option value="309">Sport (tutto)</option>
+								<option value="322">Sport individuali</option>
+								<option value="354">Centri estivi</option>
+								<option value="355">Sport di squadra</option>
+								<option value="394">Federazioni</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat310" name="cat310">
+								<option>Tempo libero</option>
+								<option value="310">Tempo libero (tutto)</option>
+								<option value="316">Parco</option>
+								<option value="317">Gite fuori porta </option>
+								<option value="318">Biblioteca</option>
+								<option value="319">Organizzazione feste</option>
+								<option value="320">Corsi e laboratori</option>
+								<option value="321">Teatro</option>
+								<option value="340">Museo</option>
+								<option value="341">Centri estivi</option>
+								<option value="342">Ludoteca</option>
+								<option value="344">Cinema</option>
+								<option value="348">Animali</option>
+								<option value="509">Viaggi e vacanze</option>
+								<option value="600">Bar e ristoranti</option>
+								<option value="402">Visite guidate</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat311" name="cat311">
+								<option>Salute</option>
+								<option value="311">Salute (tutto)</option>
+								<option value="324">ASL</option>
+								<option value="364">Assistenza prenatale</option>
+								<option value="365">Casa di cura</option>
+								<option value="366">Centro vaccinazioni</option>
+								<option value="367">Consultorio</option>
+								<option value="370">TSMREE/CPBA/USFMIA</option>
+								<option value="371">Ospedale </option>
+								<option value="372">Ambulatorio</option>
+								<option value="374">Centro specialistico</option>
+								<option value="506">Day-hospital</option>
+								<option value="601">UTM</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat313" name="cat313">
+								<option>Acquisti</option>
+								<option value="313">Acquisti (tutti)</option>
+								<option value="327">Stock e Outlet</option>
+								<option value="328">Centro commerciale</option>
+								<option value="329">Abbigliamento</option>
+								<option value="330">Calzature</option>
+								<option value="347">Giocattoli</option>
+								<option value="373">Alimentazione</option>
+								<option value="594">Puericultura</option>
+								<option value="382">Usato</option>
+								<option value="383">Arredamento</option>
+								<option value="385">Consumo critico</option>
+								<option value="386">Libri</option>
+								<option value="388">Animali</option>
+								<option value="389">Parrucchieri</option>
+								<option value="401">Articoli feste</option>
+								<option value="661">Negozio online</option>
+								<option value="603">Accessori</option>
+								<option value="621">Gruppo di Acquisto Solidale (GAS)</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat314" name="cat314">
+								<option>Servizi</option>
+								<option value="314">Servizi (tutti)</option>
+								<option value="325">Sostegno pratico</option>
+								<option value="326">Patologie organiche</option>
+								<option value="331">Assistenza legale</option>
+								<option value="332">Assistenza sociale</option>
+								<option value="333">Assistenza prenatale</option>
+								<option value="334">Assistenza psicologica</option>
+								<option value="335">Gruppo di Acquisto Solidale (GAS)</option>
+								<option value="338">Corsi e laboratori</option>
+								<option value="350">Assistenza neonatale</option>
+								<option value="379">Disagio psichico</option>
+								<option value="380">Terapie</option>
+								<option value="390">Baby sitting</option>
+								<option value="391">Assistenza scolastica</option>
+								<option value="392">Banca del Tempo</option>
+								<option value="393">Consumo critico</option>
+								<option value="415">Sindrome di Down</option>
+								<option value="425">Emergenze</option>
+								<option value="620">Nascita Pretermine</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat315" name="cat315">
+								<option>Scuola</option>
+								<option value="315">Scuola (tutte)</option>
+								<option value="430">Privata</option>
+								<option value="432">Caf</option>
+								<option value="434">Convenzionata</option>
+								<option value="435">Centri estivi</option>
+								<option value="436">Corsi e laboratori</option>
+								<option value="437">Ufficio asili nido</option>
+								<option value="438">Comunale</option>
+								<option value="439">Statale</option>
+								<option value="441">Privata religiosa</option>
+								<option value="448">Animazione</option>
+								<option value="463">baby Parking</option>
+							</select>
+	                    </li>
+   					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="searchplacesadvresult">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+			<a class="button slideup" href="#searchplacesadv">filtri</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search" action="#">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+					</ul>
+					<ul class="edgetoedge" id="search-results">
+				  		<li class="sep">Risultati</li>				
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- UI - ipbdett -->
+	<div id="ipbdett">
+		<div class="toolbar">
+			<h1>PagineBaby</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div id="dett">
+			</div>
+		</div>
+	</div>
+	
+	<!-- Aggiungi -->
+	<div id="aggiungi">
+		<div class="toolbar">
+			<h1>Aggiungi</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="ll" id="ll" value="" />
+		  			<input type="hidden" name="author" id="author" value="" />
+		  			<input type="hidden" name="pid" id="pid3" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name" /></li>
+						<li><input type="text" name="address" placeholder="Indirizzo" id="address" /></li>
+						<li>
+							<select class="cat" name="cat[]" onchange="addCat(this);">
+								<option value="">Categoria</option>
+								<optgroup label="Sport">
+									<option value="|309|322|">Sport individuali</option>
+									<option value="|309|354|">Centri estivi</option>
+									<option value="|309|355|">Sport di squadra</option>
+									<option value="|309|394|">Federazioni</option>
+								</optgroup>
+								<optgroup label="Tempo libero">
+									<option value="|310|316|">Parco</option>
+									<option value="|310|317|">Gite fuori porta </option>
+									<option value="|310|318|">Biblioteca</option>
+									<option value="|310|319|">Organizzazione feste</option>
+									<option value="|310|320|">Corsi e laboratori</option>
+									<option value="|310|321|">Teatro</option>
+									<option value="|310|340|">Museo</option>
+									<option value="|310|341|">Centri estivi</option>
+									<option value="|310|342|">Ludoteca</option>
+									<option value="|310|344|">Cinema</option>
+									<option value="|310|348|">Animali</option>
+									<option value="|310|509|">Viaggi e vacanze</option>
+									<option value="|310|600|">Bar e ristoranti</option>
+									<option value="|310|402|">Visite guidate</option>
+								</optgroup>
+								<optgroup label="Salute">
+									<option value="|311|324|">ASL</option>
+									<option value="|311|364|">Assistenza prenatale</option>
+									<option value="|311|365|">Casa di cura</option>
+									<option value="|311|366|">Centro vaccinazioni</option>
+									<option value="|311|367|">Consultorio</option>
+									<option value="|311|370|">TSMREE/CPBA/USFMIA</option>
+									<option value="|311|371|">Ospedale </option>
+									<option value="|311|372|">Ambulatorio</option>
+									<option value="|311|374|">Centro specialistico</option>
+									<option value="|311|506|">Day-hospital</option>
+									<option value="|311|601|">UTM</option>
+								</optgroup>
+								<optgroup label="Acquisti">
+									<option value="|313|327|">Stock e Outlet</option>
+									<option value="|313|328|">Centro commerciale</option>
+									<option value="|313|329|">Abbigliamento</option>
+									<option value="|313|330|">Calzature</option>
+									<option value="|313|347|">Giocattoli</option>
+									<option value="|313|373|">Alimentazione</option>
+									<option value="|313|594|">Puericultura</option>
+									<option value="|313|382|">Usato</option>
+									<option value="|313|383|">Arredamento</option>
+									<option value="|313|385|">Consumo critico</option>
+									<option value="|313|386|">Libri</option>
+									<option value="|313|388|">Animali</option>
+									<option value="|313|389|">Parrucchieri</option>
+									<option value="|313|401|">Articoli feste</option>
+									<option value="|313|661|">Negozio online</option>
+									<option value="|313|603|">Accessori</option>
+									<option value="|313|621|">Gruppo di Acquisto Solidale (GAS)</option>
+								</optgroup>
+								<optgroup label="Servizi">
+									<option value="|314|325|">Sostegno pratico</option>
+									<option value="|314|326|">Patologie organiche</option>
+									<option value="|314|331|">Assistenza legale</option>
+									<option value="|314|332|">Assistenza sociale</option>
+									<option value="|314|333|">Assistenza prenatale</option>
+									<option value="|314|334|">Assistenza psicologica</option>
+									<option value="|314|335|">Gruppo di Acquisto Solidale (GAS)</option>
+									<option value="|314|338|">Corsi e laboratori</option>
+									<option value="|314|350|">Assistenza neonatale</option>
+									<option value="|314|379|">Disagio psichico</option>
+									<option value="|314|380|">Terapie</option>
+									<option value="|314|390|">Baby sitting</option>
+									<option value="|314|391|">Assistenza scolastica</option>
+									<option value="|314|392|">Banca del Tempo</option>
+									<option value="|314|393|">Consumo critico</option>
+									<option value="|314|415|">Sindrome di Down</option>
+									<option value="|314|425|">Emergenze</option>
+									<option value="|314|620|">Nascita Pretermine</option>
+								</optgroup>
+								<optgroup label="Scuola">
+									<option value="|315|430|">Privata</option>
+									<option value="|315|432|">Caf</option>
+									<option value="|315|434|">Convenzionata</option>
+									<option value="|315|435|">Centri estivi</option>
+									<option value="|315|436|">Corsi e laboratori</option>
+									<option value="|315|437|">Ufficio asili nido</option>
+									<option value="|315|438|">Comunale</option>
+									<option value="|315|439|">Statale</option>
+									<option value="|315|441|">Privata religiosa</option>
+									<option value="|315|448|">Animazione</option>
+									<option value="|315|463|">baby Parking</option>
+								</optgroup>
+							</select>
+						</li>
+						<li><input type="text" name="street_number" placeholder="Numero civico" id="street_number" /></li>
+						<li><input type="text" name="zip" placeholder="CAP" id="zip" /></li>
+						<li><input type="text" name="city" placeholder="Citta" id="city" /></li>
+						<li><input type="text" name="country" placeholder="Stato" id="country" /></li>
+						<li id="mappaNew">mappa</li>
+						<li><textarea name="txt" placeholder="Descrizione" id="txt"></textarea></li>
+						<li><input type="text" name="phone" placeholder="Telefono" id="phone" /></li>
+						<li><input type="text" name="email" placeholder="email" id="email" /></li>
+						<li><input type="text" name="website" placeholder="Sito web" id="website" /></li>
+						<li><a class="greenButton" href="#" onclick="placeNew()">SALVA</a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Propietario -->
+	<div id="propietario">
+		<div class="toolbar">
+			<h1>Propietario</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="pid" id="pid2" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name" /></li>
+						<li><input type="text" name="address" placeholder="Indirizzo" id="address" /></li>
+						<li><textarea placeholder="Messaggio"></textarea></li>
+					</ul>
+					<ul class="individual">
+						<li><a class="greenButton" href="#" onclick="jQT.goBack()">ANNULLA</a></li>
+						<li><a class="greenButton" href="#" onclick="sendMail()">INVIA</a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Vota -->
+	<div id="rate">
+		<div class="toolbar">
+			<h1>Vota</h1>
+			<a href="#ipb" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="uid" id="uid" value="" />
+		  			<input type="hidden" name="pid" id="pid" value="" />
+					<ul class="edit rounded">
+			  			<li>Vota</li>
+			  			<li>
+						    <div id="r2" class="rate_widget">
+						        <div class="star_1 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_2 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_3 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_4 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_5 ratings_stars_big ratings_stars_active"></div>
+						    </div>
+						    <input type="hidden" name="rate" id="rateval" value="" />
+						    <br class="myClear" />
+			  			</li>
+					</ul>
+					<ul class="individual">
+						<li><a class="greenButton" href="#ipb" onclick="ratePlace()">VOTA</a></li>
+						<li><a class="greenButton" href="#ipb" onclick="rateOk (null)">ANNULLA</a></li>
+					</ul>
+		  		</form>
+		  		<br class="myClear" />
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modifica posizione -->
+	<div id="editmap">
+		<div class="toolbar">
+			<h1>Modifica mappa</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div id="map_canvas">map div</div>
+	</div>
+	
+	<!-- facebook -->
+	<div id="facebook" class="selectable">
+		<div class="toolbar">
+			<h1>PB Facebook</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<div id="fb-like-box-cnt"> </div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- preferiti -->
+	<div id="preferiti">
+		<div class="toolbar">
+			<h1>Preferiti</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="fav-results">
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Profilo -->
+	<div id="profilo">
+		<div class="toolbar">
+			<h1>Impostazioni</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="rounded" id="login">
+					<li><a href="https://m.facebook.com/dialog/oauth?client_id=366045943462852&redirect_uri=http://ipb.flyer.it/&scope=email" rel="external">Login</a></li>
+				</ul>
+				<ul class="rounded" id="logout">
+					<li id="fbname"></li>
+					<li id="fbemail"></li>
+					<li id="fblocation"></li>
+					<li><a onClick="FB.logout();$('#login').show();$('#logout').hide();">Logout</a></li>
+				</ul>
+				<div id="settings">
+					<ul class="rounded">
+						<li>Radius <span class="toggle"><input type="text" disabled="disabled" name="radius-field" id="radius-field" value="" /></span></li>
+						<li><div id="slider"></div></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="loading"><div id="loadingBkg"></div><div id="loadingImg"></div></div>
+</body>
+</html>

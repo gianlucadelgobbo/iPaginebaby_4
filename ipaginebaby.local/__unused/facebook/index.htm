@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>iSupplì</title>
+<style type="text/css" media="screen">@import "../jqtouch/jqtouch.css";</style>
+<style type="text/css" media="screen">@import "../themes/jqt/theme.css";</style>
+<style type="text/css" media="screen">@import "../extensions/jqt.bars/jqt.bars.css";</style>
+<style type="text/css" media="screen">@import "../extensions/jqt.bars/themes/jqt/theme.css";</style>
+<style type="text/css" media="screen">@import "../extensions/jqt.listIndex/jqt.listIndex.css";</style>
+<style type="text/css" media="screen">@import "../style.css";</style>
+<script src="../jqtouch/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>
+<!-- FOURSQUARE -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+<!-- FOURSQUARE -->
+<script src="../search.js" type="application/x-javascript" charset="utf-8"></script>
+
+<script src="../jqtouch/jqtouch.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="../extensions/jqt.autotitles.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="../extensions/jqt.bars/jqt.bars.js" type="application/x-javascript" charset="utf-8"></script>
+<script src="../extensions/jqt.listIndex/jqt.listIndex.js" type="application/x-javascript" charset="utf-8"></script>
+<style type="text/css" media="screen">
+/*
+#jqt.fullscreen #isuppli .info {
+  display:none;
+}
+#jqt #amici {
+  font-size:13px;
+  text-align:center;
+  text-shadow:rgba(255, 255, 255, 0.3) 0 -1px 0;
+}
+#jqt #amici p {
+  margin-bottom:8px;
+}
+#jqt #amici > div > div > p > a, h2 {
+  color:inherit;
+  font-weight:700;
+  text-decoration:none;
+}
+*/
+</style>
+<script type="text/javascript" charset="utf-8">
+</script>
+<script type="text/javascript" charset="utf-8">
+	var jQT = new $.jQTouch({
+		icon: 'jqtouch.png',
+		icon4: 'jqtouch.png',
+		addGlossToIcon: false,
+		slideleftSelector: '#jqt > ul > li > a, #jqt > ol > li > a',
+		startupScreen: 'jqt_startup.png',
+		statusBar: 'black',
+		preloadImages: [
+			'themes/jqt/img/activeButton.png',	 	
+			'themes/jqt/img/back_button.png',
+			'themes/jqt/img/back_button_clicked.png',
+			'themes/jqt/img/blueButton.png',
+			'themes/jqt/img/button.png',
+			'themes/jqt/img/button_clicked.png',
+			'themes/jqt/img/grayButton.png',
+			'themes/jqt/img/greenButton.png',
+			'themes/jqt/img/redButton.png',
+			'themes/jqt/img/whiteButton.png',
+			'themes/jqt/img/loading.gif',
+			'bar_img/ajax.png',
+			'bar_img/animation.png',
+			'bar_img/demos.png',
+			'bar_img/events.png',
+			'bar_img/extensions.png',
+			'bar_img/iphone.png',
+			'bar_img/jqt.png',
+			'bar_img/video.png',
+			'bar_img/ajax@2x.png',
+			'bar_img/animation@2x.png',
+			'bar_img/demos@2x.png',
+			'bar_img/events@2x.png',
+			'bar_img/extensions@2x.png',
+			'bar_img/iphone@2x.png',
+			'bar_img/jqt@2x.png',
+			'bar_img/video@2x.png'
+		],
+		useFastTouch: true
+	});
+   </script>
+</head>
+<body>
+<div id="fb-root"></div>
+<script type="text/javascript" charset="utf-8">
+(function() {
+	var e = document.createElement('script'); e.async = true;
+	e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	document.getElementById('fb-root').appendChild(e);
+}());
+window.fbAsyncInit = function() {
+	FB.init({ appId: '171390499619121', 
+	status: true, 
+	cookie: true,
+	xfbml: true,
+	oauth: true});
+$("#login").show();
+$("#logout").hide();
+	FB.Event.subscribe('auth.statusChange', handleStatusChange);  
+};
+function handleStatusChange(response) {
+	if (response.authResponse) {
+		FB.api('/me', function(response) {
+			$("#logout").show();
+			$("#login").hide();
+			$("#author").val(response.id);
+			$("#uid").val(response.id);
+			$("#fbname").html(response.name);
+			$("#fbemail").html(response.email);
+			$("#fblocation").html(response.location.name);
+			console.log(response);
+			alert(response.id);
+		});
+ 		//alert(response.status);
+   }
+ }
+</script>
+<!-- tabbar -->
+<div id="tabbar">
+	<div>
+		<ul>
+			<li>
+	  		<!-- Action & navigation -->
+	  		<a href="#amici" mask="../bar_img/alert.png" mask2x="../bar_img/alert@2x.png">
+				<strong>Amici</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#classifica" mask="../bar_img/ajax.png" mask2x="../bar_img/ajax@2x.png">
+				<strong>Classifica</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#isuppli" mask="../bar_img/iphone.png" mask2x="../bar_img/events@2x.png" onclick="nearMe()">
+				<strong>iSupplì</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#provare" mask="../bar_img/events.png" mask2x="../bar_img/events@2x.png">
+				<small class="badge right">4</small>
+				<strong>Da provare</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#profilo" mask="../bar_img/demos.png" mask2x="../bar_img/demos@2x.png">
+				<strong>Profilo</strong>
+	  		</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="jqt">
+	<!-- iSupplì -->
+	<div id="isuppli">
+		<div class="toolbar">
+			<h1>iSupplì</h1>
+			<a id="searchButton" class="button slideup" href="#searchplaces">cerca</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+				<ul class="edgetoedge" id="near-results">
+				  	<li class="sep">Cerco supplì vicino a te</li>				
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="searchplaces">
+		<div class="toolbar">
+			<a href="#" class="back"></a>
+			<h1>iSupplì</h1>
+			<a id="add" class="button add slideup" href="#aggiungi" onclick="onAdd()">+</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+				<form id="search" action="#">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+					</ul>
+					<ul class="edgetoedge" id="search-results">
+				  		<li class="sep">Risultati</li>				
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- UI - isupplidett -->
+	<div id="isupplidett">
+		<div class="toolbar">
+			<h1>iSupplì</h1>
+			<a href="#" class="back"></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div id="dett">
+			</div>
+		</div>
+	</div>
+	
+	<!-- Aggiungi supply -->
+	<div id="aggiungi">
+		<div class="toolbar">
+			<h1>Aggiungi supplì</h1>
+			<a href="#" class="back"></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+		  		<form>
+		  			<input type="hidden" name="ll" id="ll" value="" />
+		  			<input type="hidden" name="author" id="author" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name" /></li>
+						<li><input type="text" name="address" placeholder="Address" id="address" /></li>
+						<li><input type="text" name="zip" placeholder="zip" id="zip" /></li>
+						<li><input type="text" name="city" placeholder="city" id="city" /></li>
+						<li><input type="text" name="state" placeholder="state" id="state" /></li>
+						<li><input type="text" name="phone" placeholder="phone" id="phone" /></li>
+						<li id="mappaNew">mappa</li>
+						<li><a class="whiteButton" href="#rate" onclick="venueNew()">SALVA</a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Vota -->
+	<div id="rate">
+		<div class="toolbar">
+			<h1>Vota</h1>
+			<a href="#isuppli" class="back"></a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+		  		<form>
+		  			<input type="hidden" name="uid" id="uid" value="" />
+		  			<input type="hidden" name="pid" id="pid" value="" />
+					<ul class="edit rounded">
+			  			<li>Sugo <input type="radio" name="sugo" value="1" title="1" /> <input type="radio" name="sugo" value="2" title="2" /> <input type="radio" name="sugo" value="3" title="3" /> <input type="radio" name="sugo" value="4" title="4" /> <input type="radio" name="sugo" value="5" title="5" /></li>
+			  			<li>Frittura <input type="radio" name="frittura" value="1" title="1" /> <input type="radio" name="frittura" value="2" title="2" /> <input type="radio" name="frittura" value="3" title="3" /> <input type="radio" name="frittura" value="4" title="4" /> <input type="radio" name="frittura" value="5" title="5" /></li>
+						<li><a class="whiteButton" href="#isuppli" onclick="venueRate()">VOTA</a></li>
+						<li><a class="whiteButton" href="#isuppli" onclick="rateOk (null)">ANNULLA</a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modifica posizione -->
+	<div id="editmap">
+		<div class="toolbar">
+			<h1>Modifica posizione</h1>
+			<a href="#" class="back" onclick="venueUpdate()"></a>
+		</div>
+		<div id="map_canvas" style="width: 320px; height: 630px;">map div</div>
+	</div>
+	
+	<!-- Amici -->
+	<div id="amici" class="selectable">
+		<div class="toolbar">
+			<h1>Amici</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+				<div class="info">Lista post wall supplì</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Classifica -->
+	<div id="classifica">
+		<div class="toolbar">
+			<h1>Classifica</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+		  		<div class="info">Classifica</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Da provare -->
+	<div id="provare">
+		<div class="toolbar">
+			<h1>Da provare</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+		  		<div class="info">Da provare</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Profilo -->
+	<div id="profilo">
+		<div class="toolbar">
+			<h1>Profilo</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div>
+				<ul class="rounded" id="login">
+					<li><a href="https://m.facebook.com/dialog/oauth?client_id=171390499619121&redirect_uri=http://isuppli.flyer.it/&scope=email" rel="external">Login</a></li>
+				</ul>
+				<ul class="rounded" id="logout">
+					<li id="fbname"></li>
+					<li id="fbemail"></li>
+					<li id="fblocation"></li>
+					<li><a onClick="FB.logout();$('#login').show();$('#logout').hide();">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="loading"><div id="loadingBkg"></div><div id="loadingImg"></div></div>
+</body>
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html xmlns:fb="http://ogp.me/ns/fb#">
+<head>
+<title>PagineBaby</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style type="text/css" media="screen">@import "jqtouch/jqtouch.css";</style>
+<style type="text/css" media="screen">@import "themes/apple/theme.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.bars/jqt.bars.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.bars/themes/apple/theme.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.listIndex/jqt.listIndex.css";</style>
+<style type="text/css" media="screen">@import "style.css";</style>
+<style type="text/css" media="screen">@import "css/south-street/jquery-ui-1.8.21.custom.css";</style>
+<style type="text/css" media="screen">@import "extensions/jqt.photo.css";</style>
+
+
+<script type="text/javascript" src="jqtouch/jquery-1.4.2.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+<!-- GOOGLEAPI -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+<!-- GOOGLEAPI -->
+<script type="text/javascript" src="script.js" charset="utf-8"></script>
+<script type="text/javascript" src="jqtouch/jqtouch.js" charset="utf-8"></script>
+<script type="text/javascript" src="extensions/jqt.autotitles.js" charset="utf-8"></script>
+<script type="text/javascript" src="extensions/jqt.bars/jqt.bars.js" charset="utf-8"></script>
+<script type="text/javascript" src="extensions/jqt.listIndex/jqt.listIndex.js" charset="utf-8"></script>
+<script type="text/javascript" src="extensions/jqt.photo.js" charset="utf-8"></script>
+
+<script type="text/javascript" charset="utf-8">
+	var jQT = new $.jQTouch({
+		icon: 'ico/57x57.png',
+		icon4: 'ico/114x114.png',
+		addGlossToIcon: false,
+		slideleftSelector: '#jqt > ul > li > a, #jqt > ol > li > a',
+		startupScreen: 'ico/startup.png',
+		statusBar: 'black',
+		preloadImages: [
+			'themes/apple/img/activeButton.png',	 	
+			'themes/apple/img/back_button.png',
+			'themes/apple/img/back_button_clicked.png',
+			'themes/apple/img/blueButton.png',
+			'themes/apple/img/button.png',
+			'themes/apple/img/button_clicked.png',
+			'themes/apple/img/grayButton.png',
+			'themes/apple/img/greenButton.png',
+			'themes/apple/img/redButton.png',
+			'themes/apple/img/whiteButton.png',
+			'themes/apple/img/loading.gif',
+			'bar_img/ajax.png',
+			'bar_img/animation.png',
+			'bar_img/demos.png',
+			'bar_img/events.png',
+			'bar_img/extensions.png',
+			'bar_img/iphone.png',
+			'bar_img/jqt.png',
+			'bar_img/video.png',
+			'bar_img/ajax@2x.png',
+			'bar_img/animation@2x.png',
+			'bar_img/demos@2x.png',
+			'bar_img/events@2x.png',
+			'bar_img/extensions@2x.png',
+			'bar_img/iphone@2x.png',
+			'bar_img/jqt@2x.png',
+			'bar_img/video@2x.png'
+		],
+		useFastTouch: true
+	});
+</script>
+</head>
+<body>
+<div id="data">loading ...</div>
+<div id="fb-root"></div>
+<!-- ONLY IPHONE -->
+
+<!-- cordova -->
+<script src="iphone/cordova-1.6.0.js"></script>
+<!-- cordova facebook plugin -->
+<script src="iphone/cdv-plugin-fb-connect.js"></script>
+<!-- facebook js sdk -->
+<script src="iphone/facebook_js_sdk.js"></script>
+<script type="text/javascript">
+	$("#login").show();
+	$("#logout").hide();
+	document.addEventListener('deviceready', function() {
+		try {
+			console.log('Device is ready! Make sure you set your app_id below this alert.');
+			FB.init({ appId: "366045943462852", nativeInterface: CDV.FB, useCachedDialogs: false });
+			document.getElementById('data').innerHTML = "";
+		} catch (e) {
+			console.log(e);
+		}
+	}, false);
+
+	function login() {
+		$('#login').hide();
+		$("#fb-like-box-cnt").empty();
+		$("#fav-results").empty();
+		FB.login(function(response) {
+			if (response.authResponse.session_key) {
+				 console.log('logged in');
+			} else {
+				 console.log('not logged in');
+				 $('#login').show();
+				 $("#fb-like-box-cnt").html("<li>Per accedere a Facebook devi essere loggato, <a href=\"#\" onclick=\"login()\">accedi ora</a></li>");
+				 $("#fav-results").html("<li>Per visualizzare i preferiti devi essere loggato, <a href=\"#\" onclick=\"login()\">accedi ora</a></li>");
+			}
+		},{ scope: "email" });
+	}
+
+	FB.Event.subscribe('auth.login', function(response) {
+		me(response);
+	});
+</script>
+<!-- ONLY IPHONE END -->	
+<div id="log"></div>
+<!-- tabbar -->
+<div id="tabbar">
+	<div>
+		<ul>
+			<li>
+	  		<!-- Action & navigation -->
+	  		<a href="#facebook" mask="bar_img/alert.png" mask2x="bar_img/alert@2x.png">
+				<strong>Facebook</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#preferiti" mask="bar_img/demos.png" mask2x="bar_img/demos@2x.png">
+				<strong>Preferiti</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#ipb" mask="bar_img/iphone.png" mask2x="bar_img/iphone@2x.png" onclick="nearMe()">
+				<!-- <small class="badge right">4</small> -->
+				<strong>PagineBaby</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#aggiungi" mask="bar_img/extensions.png" mask2x="bar_img/extensions@2x.png" onclick="onAdd();">
+				<strong>Aggiungi</strong>
+	  		</a>
+			</li>
+			<li>
+	  		<a href="#profilo" mask="bar_img/more.png" mask2x="bar_img/more@2x.png">
+				<strong>Impostazioni</strong>
+	  		</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+<div id="jqt">
+	<!-- PagineBaby -->
+	<div id="ipb">
+		<div class="toolbar">
+			<a class="leftButton button slideup" href="#searchplaces">cerca</a>
+			<h1>PagineBaby</h1>
+			<a id="searchButton" class="button slideup" href="#searchplacesadv">categorie</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="near-results">
+				  	<li class="sep">Cerco vicino a te</li>				
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="searchplaces">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+			<a class="button slideup" href="#searchplacesadv">categorie</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search" action="#">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+					</ul>
+					<ul class="edgetoedge" id="search-results">
+				  		<li class="sep">Risultati</li>				
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="searchplacesadv">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search2" action="#">
+					<ul class="edgetoedge">
+						<li>
+							<select onchange="advSearch(this.value);" id="cat309" name="cat309">
+								<option>Sport</option>
+								<option value="309">Sport (tutto)</option>
+								<option value="322">Sport individuali</option>
+								<option value="354">Centri estivi</option>
+								<option value="355">Sport di squadra</option>
+								<option value="394">Federazioni</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat310" name="cat310">
+								<option>Tempo libero</option>
+								<option value="310">Tempo libero (tutto)</option>
+								<option value="316">Parco</option>
+								<option value="317">Gite fuori porta </option>
+								<option value="318">Biblioteca</option>
+								<option value="319">Organizzazione feste</option>
+								<option value="320">Corsi e laboratori</option>
+								<option value="321">Teatro</option>
+								<option value="340">Museo</option>
+								<option value="341">Centri estivi</option>
+								<option value="342">Ludoteca</option>
+								<option value="344">Cinema</option>
+								<option value="348">Animali</option>
+								<option value="509">Viaggi e vacanze</option>
+								<option value="600">Bar e ristoranti</option>
+								<option value="402">Visite guidate</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat311" name="cat311">
+								<option>Salute</option>
+								<option value="311">Salute (tutto)</option>
+								<option value="324">ASL</option>
+								<option value="364">Assistenza prenatale</option>
+								<option value="365">Casa di cura</option>
+								<option value="366">Centro vaccinazioni</option>
+								<option value="367">Consultorio</option>
+								<option value="370">TSMREE/CPBA/USFMIA</option>
+								<option value="371">Ospedale </option>
+								<option value="372">Ambulatorio</option>
+								<option value="374">Centro specialistico</option>
+								<option value="506">Day-hospital</option>
+								<option value="601">UTM</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat313" name="cat313">
+								<option>Acquisti</option>
+								<option value="313">Acquisti (tutti)</option>
+								<option value="327">Stock e Outlet</option>
+								<option value="328">Centro commerciale</option>
+								<option value="329">Abbigliamento</option>
+								<option value="330">Calzature</option>
+								<option value="347">Giocattoli</option>
+								<option value="373">Alimentazione</option>
+								<option value="594">Puericultura</option>
+								<option value="382">Usato</option>
+								<option value="383">Arredamento</option>
+								<option value="385">Consumo critico</option>
+								<option value="386">Libri</option>
+								<option value="388">Animali</option>
+								<option value="389">Parrucchieri</option>
+								<option value="401">Articoli feste</option>
+								<option value="661">Negozio online</option>
+								<option value="603">Accessori</option>
+								<option value="621">Gruppo di Acquisto Solidale (GAS)</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat314" name="cat314">
+								<option>Servizi</option>
+								<option value="314">Servizi (tutti)</option>
+								<option value="325">Sostegno pratico</option>
+								<option value="326">Patologie organiche</option>
+								<option value="331">Assistenza legale</option>
+								<option value="332">Assistenza sociale</option>
+								<option value="333">Assistenza prenatale</option>
+								<option value="334">Assistenza psicologica</option>
+								<option value="335">Gruppo di Acquisto Solidale (GAS)</option>
+								<option value="338">Corsi e laboratori</option>
+								<option value="350">Assistenza neonatale</option>
+								<option value="379">Disagio psichico</option>
+								<option value="380">Terapie</option>
+								<option value="390">Baby sitting</option>
+								<option value="391">Assistenza scolastica</option>
+								<option value="392">Banca del Tempo</option>
+								<option value="393">Consumo critico</option>
+								<option value="415">Sindrome di Down</option>
+								<option value="425">Emergenze</option>
+								<option value="620">Nascita Pretermine</option>
+							</select>
+						</li>
+						<li>
+							<select onchange="advSearch(this.value);" id="cat315" name="cat315">
+								<option>Scuola</option>
+								<option value="315">Scuola (tutte)</option>
+								<option value="430">Privata</option>
+								<option value="432">Caf</option>
+								<option value="434">Convenzionata</option>
+								<option value="435">Centri estivi</option>
+								<option value="436">Corsi e laboratori</option>
+								<option value="437">Ufficio asili nido</option>
+								<option value="438">Comunale</option>
+								<option value="439">Statale</option>
+								<option value="441">Privata religiosa</option>
+								<option value="448">Animazione</option>
+								<option value="463">baby Parking</option>
+							</select>
+	                    </li>
+   					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div id="searchplacesadvresult">
+		<div class="toolbar">
+			<a href="#" class="back">indietro</a>
+			<h1>PagineBaby</h1>
+			<a class="button slideup" href="#searchplacesadv">filtri</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<form id="search" action="#">
+					<ul class="edgetoedge">
+				  		<li><input type="text" name="search-text" placeholder="Cerca" id="search-text" /></li>
+					</ul>
+					<ul class="edgetoedge" id="search-results">
+				  		<li class="sep">Risultati</li>				
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- UI - ipbdett -->
+	<div id="ipbdett">
+		<div class="toolbar">
+			<h1>PagineBaby</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div id="dett">
+			</div>
+		</div>
+	</div>
+	
+	<!-- Aggiungi -->
+	<div id="aggiungi">
+		<div class="toolbar">
+			<h1>Aggiungi</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="ll" id="ll" value="" />
+		  			<input type="hidden" name="author" id="author" value="" />
+		  			<input type="hidden" name="pid" id="pid3" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" id="name" /></li>
+						<li><input type="text" name="address" placeholder="Indirizzo" id="address" /></li>
+						<li>
+							<select class="cat" name="cat[]" onchange="addCat(this);">
+								<option value="">Categoria</option>
+								<optgroup label="Sport">
+									<option value="|309|322|">Sport individuali</option>
+									<option value="|309|354|">Centri estivi</option>
+									<option value="|309|355|">Sport di squadra</option>
+									<option value="|309|394|">Federazioni</option>
+								</optgroup>
+								<optgroup label="Tempo libero">
+									<option value="|310|316|">Parco</option>
+									<option value="|310|317|">Gite fuori porta </option>
+									<option value="|310|318|">Biblioteca</option>
+									<option value="|310|319|">Organizzazione feste</option>
+									<option value="|310|320|">Corsi e laboratori</option>
+									<option value="|310|321|">Teatro</option>
+									<option value="|310|340|">Museo</option>
+									<option value="|310|341|">Centri estivi</option>
+									<option value="|310|342|">Ludoteca</option>
+									<option value="|310|344|">Cinema</option>
+									<option value="|310|348|">Animali</option>
+									<option value="|310|509|">Viaggi e vacanze</option>
+									<option value="|310|600|">Bar e ristoranti</option>
+									<option value="|310|402|">Visite guidate</option>
+								</optgroup>
+								<optgroup label="Salute">
+									<option value="|311|324|">ASL</option>
+									<option value="|311|364|">Assistenza prenatale</option>
+									<option value="|311|365|">Casa di cura</option>
+									<option value="|311|366|">Centro vaccinazioni</option>
+									<option value="|311|367|">Consultorio</option>
+									<option value="|311|370|">TSMREE/CPBA/USFMIA</option>
+									<option value="|311|371|">Ospedale </option>
+									<option value="|311|372|">Ambulatorio</option>
+									<option value="|311|374|">Centro specialistico</option>
+									<option value="|311|506|">Day-hospital</option>
+									<option value="|311|601|">UTM</option>
+								</optgroup>
+								<optgroup label="Acquisti">
+									<option value="|313|327|">Stock e Outlet</option>
+									<option value="|313|328|">Centro commerciale</option>
+									<option value="|313|329|">Abbigliamento</option>
+									<option value="|313|330|">Calzature</option>
+									<option value="|313|347|">Giocattoli</option>
+									<option value="|313|373|">Alimentazione</option>
+									<option value="|313|594|">Puericultura</option>
+									<option value="|313|382|">Usato</option>
+									<option value="|313|383|">Arredamento</option>
+									<option value="|313|385|">Consumo critico</option>
+									<option value="|313|386|">Libri</option>
+									<option value="|313|388|">Animali</option>
+									<option value="|313|389|">Parrucchieri</option>
+									<option value="|313|401|">Articoli feste</option>
+									<option value="|313|661|">Negozio online</option>
+									<option value="|313|603|">Accessori</option>
+									<option value="|313|621|">Gruppo di Acquisto Solidale (GAS)</option>
+								</optgroup>
+								<optgroup label="Servizi">
+									<option value="|314|325|">Sostegno pratico</option>
+									<option value="|314|326|">Patologie organiche</option>
+									<option value="|314|331|">Assistenza legale</option>
+									<option value="|314|332|">Assistenza sociale</option>
+									<option value="|314|333|">Assistenza prenatale</option>
+									<option value="|314|334|">Assistenza psicologica</option>
+									<option value="|314|335|">Gruppo di Acquisto Solidale (GAS)</option>
+									<option value="|314|338|">Corsi e laboratori</option>
+									<option value="|314|350|">Assistenza neonatale</option>
+									<option value="|314|379|">Disagio psichico</option>
+									<option value="|314|380|">Terapie</option>
+									<option value="|314|390|">Baby sitting</option>
+									<option value="|314|391|">Assistenza scolastica</option>
+									<option value="|314|392|">Banca del Tempo</option>
+									<option value="|314|393|">Consumo critico</option>
+									<option value="|314|415|">Sindrome di Down</option>
+									<option value="|314|425|">Emergenze</option>
+									<option value="|314|620|">Nascita Pretermine</option>
+								</optgroup>
+								<optgroup label="Scuola">
+									<option value="|315|430|">Privata</option>
+									<option value="|315|432|">Caf</option>
+									<option value="|315|434|">Convenzionata</option>
+									<option value="|315|435|">Centri estivi</option>
+									<option value="|315|436|">Corsi e laboratori</option>
+									<option value="|315|437|">Ufficio asili nido</option>
+									<option value="|315|438|">Comunale</option>
+									<option value="|315|439|">Statale</option>
+									<option value="|315|441|">Privata religiosa</option>
+									<option value="|315|448|">Animazione</option>
+									<option value="|315|463|">baby Parking</option>
+								</optgroup>
+							</select>
+						</li>
+						<li><input type="text" name="street_number" placeholder="Numero civico" id="street_number" /></li>
+						<li><input type="text" name="zip" placeholder="CAP" id="zip" /></li>
+						<li><input type="text" name="city" placeholder="Citta" id="city" /></li>
+						<li><input type="text" name="country" placeholder="Stato" id="country" /></li>
+						<li id="mappaNew">mappa</li>
+						<li><textarea name="txt" placeholder="Descrizione" id="txt"></textarea></li>
+						<li><input type="text" name="phone" placeholder="Telefono" id="phone" /></li>
+						<li><input type="text" name="email" placeholder="email" id="email" /></li>
+						<li><input type="text" name="website" placeholder="Sito web" id="website" /></li>
+						<li><a class="greenButton" href="#" onclick="placeSave()">SALVA</a></li>
+					</ul>
+		  		</form>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Propietario -->
+	<div id="propietario">
+		<div class="toolbar">
+			<h1>Segnalazioni</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form id="segnalazioniMsg">
+		  			<input type="hidden" name="pid" id="pid2" value="" />
+					<ul class="edit rounded">
+						<li><input type="text" name="name" placeholder="Nome *" /></li>
+						<li><input type="text" name="email" placeholder="Email *" /></li>
+						<li><textarea name="message" placeholder="Messaggio *"></textarea></li>
+						<li><a class="greenButton" href="#" onclick="sendMail('#segnalazioniMsg')">INVIA</a></li>
+						<li><a class="greenButton" href="#" onclick="jQT.goBack()">ANNULLA</a></li>
+					</ul>
+		  		</form>
+		  		<br class="myClear" />
+			</div>
+		</div>
+	</div>
+
+	<!-- Vota -->
+	<div id="rate">
+		<div class="toolbar">
+			<h1>Vota</h1>
+			<a href="#ipb" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+		  		<form>
+		  			<input type="hidden" name="uid" id="uid" value="" />
+		  			<input type="hidden" name="pid" id="pid" value="" />
+					<ul class="edit rounded">
+			  			<li>Vota</li>
+			  			<li>
+						    <div id="r2" class="rate_widget">
+						        <div class="star_1 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_2 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_3 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_4 ratings_stars_big ratings_stars_active"></div>
+						        <div class="star_5 ratings_stars_big ratings_stars_active"></div>
+						    </div>
+						    <input type="hidden" name="rate" id="rateval" value="" />
+						    <br class="myClear" />
+			  			</li>
+			  			<li>
+							<ul class="individual">
+								<li><a class="greenButton" href="#ipb" onclick="ratePlace()">VOTA</a></li>
+								<li><a class="greenButton" href="#ipb" onclick="rateOk (null)">ANNULLA</a></li>
+							</ul>
+			  			</li>
+					</ul>
+		  		</form>
+		  		<br class="myClear" />
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modifica posizione -->
+	<div id="editmap">
+		<div class="toolbar">
+			<h1>Modifica mappa</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div id="map_canvas">map div</div>
+	</div>
+	
+	<!-- facebook -->
+	<div id="facebook" class="selectable">
+		<div class="toolbar">
+			<h1>PB Facebook</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="fb-like-box-cnt">
+					<li>Per accedere a facebook devi essere loggato, <a href="#" onclick="login()">accedi ora</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- preferiti -->
+	<div id="preferiti">
+		<div class="toolbar">
+			<h1>Preferiti</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<ul class="edgetoedge" id="fav-results">
+					<li>Per visualizzare i preferiti devi essere loggato, <a href="#" onclick="login()">accedi ora</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Profilo -->
+	<div id="profilo">
+		<div class="toolbar">
+			<h1>Impostazioni</h1>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<h2>Utente</h2>
+				<ul class="rounded">
+					<li class="logout" id="fbname"></li>
+					<li class="logout" id="fbemail"></li>
+					<li class="logout" id="fblocation"></li>
+					<li class="logout"><a onClick="logout();">Logout</a></li>
+					<li class="login"><a href="#" onClick="login()">Login</a></li>
+				</ul>
+				<h2>Impostazioni</h2>
+				<ul class="rounded">
+					<li>Raggio d'azione <span class="toggle"><input type="text" disabled="disabled" name="radius-field" id="radius-field" value="" /></span></li>
+					<li><div id="slider"></div></li>
+					<li>Posizione dispositivo<span class="toggle"><input type="checkbox" name="autopos" id="autopos" value="1" onchange="setMode();" /></span></li>
+					<li id="position">Nessuna posizione impostata <a href="#editmap" onclick="editPosMap()">imposta manualmente</a></li>
+				</ul>
+				<h2>Altro</h2>
+				<ul class="rounded">
+					<li><a href="#comeusare">Come usare PagineBaby</a></li>
+					<li><a href="#credits">Credits</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- Credits -->
+	<div id="credits">
+		<div class="toolbar">
+			<h1>Credits</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<div class="dettCntMain">
+					<center>
+						<p>
+						Pagine Baby è un progetto della cooperativa <b>Rana Elettrica</b>
+						<a href="http://www.paginebaby.it" target="_blank">www.paginebaby.it</a><br /><br />
+						</p>
+						<hr />
+						<p>
+						This app is made by<br />
+						<b>Flyer communication</b><br />
+						<a href="http://www.flyer.it" target="_blank">www.flyer.it</a>
+						</p>
+					<center>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Comeusare -->
+	<div id="comeusare">
+		<div class="toolbar">
+			<h1>Come usare</h1>
+			<a href="#" class="back">indietro</a>
+		</div>
+		<div class="s-scrollwrapper">
+			<div class="s-scrollpane">
+				<div class="dettCntMain">
+					<p>Pagine Baby trova gli indirizzi più vicini alla posizione rilevata o impostata da te; le strutture
+					in Primo Piano sono in cima alla lista.<br /><br />
+
+					Cerca tutti gli indirizzi vicino a te o per Categorie; utilizza il tasto Cerca se sai esattamente
+					cosa ti serve. Puoi inserire una parola chiave; ricorda che la ricerca è più efficace se elimini
+					l’ultima lettera che definisce il singolare, il plurale o il genere (es. inserisci "passeggin" per
+					trovare "passeggini" e "passeggino").<br /><br />
+					
+					Se conosci una struttura d’interesse o se ne sei il titolare, puoi usare la funzione Aggiungi per
+					inserirla in Pagine Baby.<br /><br />
+					
+					Se sei il titolare di una struttura già presente, puoi rivendicarne la proprietà e modificare i
+					dati se necessario.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="loading"><div id="loadingBkg"></div><div id="loadingImg"></div></div>
+</body>
+</html>
